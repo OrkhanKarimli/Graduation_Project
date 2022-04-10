@@ -1,0 +1,88 @@
+﻿@model IEnumerable<ContactMessage>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<form>
+    <div class="form-group">
+        <input type="checkbox" name="visibility" class="contact-vis" id="vis" @(TempData["Vis"].ToString() == "checked" ? "checked" : "") />
+        <label for="vis">Yalnız cavablanan mesajları göstər</label>
+    </div>
+</form>
+
+@if (TempData["Vis"].ToString() == "checked")
+{
+    <table class="table table-striped vis-yes mb-5">
+        <thead>
+            <tr>
+                <th>Id: </th>
+                <th>Email: </th>
+                <th>Name: </th>
+                <th>Content: </th>
+                <th>Send Date: </th>
+                <th>Reply: </th>
+                <th>Answer Date: </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ContactMessage item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.EmailAddres</td>
+                    <td>@item.Name</td>
+                    <td>@item.Content</td>
+                    <td>@item.SendDate.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                    <td>@item.Reply</td>
+                    <td>@item.AnswerDate?.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="table table-striped vis-none mb-5">
+        <thead>
+            <tr>
+                <th>Id: </th>
+                <th>Email: </th>
+                <th>Name: </th>
+                <th>Content: </th>
+                <th>Send Date: </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ContactMessage item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.EmailAddres</td>
+                    <td>@item.Name</td>
+                    <td>@item.Content</td>
+                    <td>@item.SendDate.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                    <td><a asp-action="Reply" asp-route-id="@item.Id" class="btn btn-warning">Cavabla</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section js{
+    <script>
+        /* $('.vis-yes').css('visibility', 'hidden');*/
+        $('.contact-vis').on('change', (e) => {
+            $(e.currentTarget).closest('form').submit();
+            if ($(e.currentTarget).prop('checked')) {
+                $('.vis-none').css('visibility', 'hidden');
+                $('.vis-yes').css('visibility', 'visible');
+            }
+            else {
+                $('.vis-yes').css('visibility', 'hidden');
+                $('.vis-none').css('visibility', 'visible');
+            }
+        });
+    </script>
+}

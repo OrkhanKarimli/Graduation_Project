@@ -1,0 +1,254 @@
+﻿@model IEnumerable<DiscountProductViewModel>
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+
+    // Projection
+    var filteredDiffProducts = Model.Select(d => new { d.ProductId, d.Price, d.PriceNew, d.CampaignTitle, d.Title, d.Discount, d.ProductImages }).Distinct();
+}
+
+@section css{
+    <style>
+        .basket-a, .price {
+            visibility: visible !important;
+        }
+
+        .remove-btn {
+            cursor: pointer;
+        }
+
+        .toast-warning {
+            background-color: #f1c40f !important;
+        }
+    </style>
+}
+
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Shopping Cart</h4>
+                    <div class="breadcrumb__links">
+                        <a href="index.html">Home</a>
+                        <a href="shop.html">Shop</a>
+                        <span>Shopping Cart</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                @if (Model.Count() == 0)
+                {
+                    <div class="alert alert-warning text-center" role="alert">
+                        Hələ ki, səbət boşdur!
+                    </div>
+                }
+                else
+                {
+                    <div class="shopping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in filteredDiffProducts)
+                                {
+                                    <tr>
+                                        <td class="product__cart__item d-flex align-items-center">
+                                            <div class="product__cart__item__pic" style="width: 50%;">
+                                                <img src="assets/images/shop/@item.ProductImages.FirstOrDefault(pi => pi.IsMain)?.ImagePath"
+                                                     alt="" style="width: 100%; height: 250px; object-fit: cover;" />
+                                            </div>
+                                            <div class="product__cart__item__text">
+                                                <h6>@item.Title.EllipseText(50)</h6>
+                                                <h5>$@(item.PriceNew == null ? item.Price : item.PriceNew)</h5>
+                                            </div>
+                                        </td>
+                                        <td class="quantity__item">
+                                            <div class="quantity">
+                                                <div class="pro-qty-2">
+                                                    <input type="number" min="1" value="1" readonly />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="cart__price" data-prod-id="@item.ProductId">$@(item.PriceNew == null ? item.Price : item.PriceNew)</td>
+                                        <td class="cart__close"><i class="fa fa-close remove-btn"></i></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="continue__btn">
+                                <a asp-action="Index" asp-controller="Shop">Continue Shopping</a>
+                            </div>
+                        </div>
+                        @*<div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="continue__btn update__btn">
+                                    <a href="#"><i class="fa fa-spinner"></i> Update cart</a>
+                                </div>
+                            </div>*@
+                    </div>
+                }
+            </div>
+            <div class="col-lg-4">
+                @*<div class="cart__discount">
+                        <h6>Discount codes</h6>
+                        <form action="#">
+                            <input type="text" placeholder="Coupon code" />
+                            <button type="submit">Apply</button>
+                        </form>
+                    </div>*@
+                <div class="cart__total">
+                    <h6>Cart total</h6>
+                    <ul>
+                        @*<li>Subtotal <span>$ 169.50</span></li>*@
+                        <li>Total <span>$0.00</span></li>
+                    </ul>
+                    <a style="cursor: pointer;color: white;" class="primary-btn">Proceed to checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script src="libs/jquery-cookie/jquery.cookie.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let total = $('.cart__total span');
+
+            //Basket Logic
+            let priceEl = $('.price');
+            let priceVal = parseFloat($('.price').text().replace("$", ""));
+            let basket = $('.header__nav__option span');
+
+            //Get Items' Price
+            let bagTotal = $.cookie("bagTotal");
+            let bagFromCookie = $.cookie("bag");
+
+            if (bagTotal != undefined && bagFromCookie != undefined) {
+                $(priceEl).text(`$${bagTotal}`);
+                $(total).text(`$${bagTotal}`);
+                priceVal = parseFloat($('.price').text().replace("$", ""));
+                let bagTotalArr = bagFromCookie.split(',');
+                $(basket).text(bagTotalArr.length);
+            }
+
+            //ShoppingCart
+            let decBtn = $('.dec');
+            let incBtn = $('.inc');
+
+            let totalVal = parseFloat($('.cart__total span').text().replace("$", ""));
+
+            let allProductPrices = $('.cart__price');
+
+            $(decBtn).click((e) => {
+                e.preventDefault();
+
+                let inp = $(e.currentTarget).next('input');
+                let inpParsedVal = parseInt($(inp).val());
+                --inpParsedVal;
+
+                let productPrice = $(e.currentTarget).closest('tr').find('.product__cart__item__text>h5');
+                let productTotal = $(e.currentTarget).closest('tr').find('.cart__price');
+
+                productPrice = parseFloat($(productPrice).text().replace("$", "").replace(",", "."));
+
+                $(productTotal).text(`$${productPrice * inpParsedVal}`);
+
+                let pricesTotal = 0;
+                //Incrementation
+                for (let priceElements of allProductPrices) {
+                    let prices = parseFloat($(priceElements).text().replace('$', '').replace(',', '.'));
+
+                    pricesTotal += prices;
+                    $(total).text(`$${pricesTotal.toFixed(2)}`);
+                }
+            });
+
+            $(incBtn).click((e) => {
+                e.preventDefault();
+
+                let inp = $(e.currentTarget).prev('input');
+                let inpParsedVal = parseInt($(inp).val());
+                ++inpParsedVal;
+
+                let productPrice = $(e.currentTarget).closest('tr').find('.product__cart__item__text>h5');
+                let productTotal = $(e.currentTarget).closest('tr').find('.cart__price');
+
+                productPrice = parseFloat($(productPrice).text().replace("$", "").replace(",", "."));
+
+                $(productTotal).text(`$${productPrice * inpParsedVal}`);
+
+                let pricesTotal = 0;
+                //Incrementation
+                for (let priceElements of allProductPrices) {
+                    let prices = parseFloat($(priceElements).text().replace('$', '').replace(',', '.'));
+
+                    pricesTotal += prices;
+                    $(total).text(`$${pricesTotal.toFixed(2)}`);
+                }
+            });
+
+            //Delete Items From Basket
+            $('.remove-btn').on('click', (e) => {
+                //Constants Strict Variables
+                const selectedCartPrice = $(e.currentTarget).parent().prev('.cart__price');
+                $(selectedCartPrice).text('$0');
+                $(selectedCartPrice).closest('tr').remove();
+
+                let clickedProdId = $(selectedCartPrice).data('prod-id');
+                let bagFromCookieArr = $.cookie("bag").split(',').map(v => Number(v))
+
+                let index = bagFromCookieArr.indexOf(clickedProdId);
+                if (index != -1) {
+                    bagFromCookieArr.splice(index, 1);
+
+                    $.cookie("bag", bagFromCookieArr.toString(), { expires: 365 });
+                }
+                else {
+                    return;
+                }
+
+                let pricesTotal = 0;
+                //incrementation
+                for (let priceElements of allProductPrices) {
+                    let prices = parseFloat($(priceElements).text().replace('$', '').replace(',', '.'));
+
+                    pricesTotal += prices;
+
+                    let newBagTotalFromCookie = $.cookie("bagTotal");
+                    let newBagFromCookieArr = $.cookie("bag").split(',');
+
+                    $(total).text(`$${pricesTotal.toFixed(2)}`);
+                    $.cookie("bagTotal", pricesTotal.toFixed(2), { expires: 365 });
+                    $('.price').text(`$${pricesTotal.toFixed(2)}`);
+
+                    if (newBagTotalFromCookie == '0.00') {
+                        $('.price').prev('.basket-a').find('span').text('0');
+                    }
+                    else {
+                        $('.price').prev('.basket-a').find('span').text(newBagFromCookieArr.length);
+                    }
+
+                    //Activate Toastr
+                    toastr.warning("Seçdiyiniz məhsul uğurla səbətdən çıxarıldı!", "Çıxarıldı!");
+                }
+            });
+        });
+    </script>
+}

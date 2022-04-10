@@ -1,0 +1,68 @@
+﻿@model IEnumerable<MaleFashion.eCommerce.WebUI.Models.Entity.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-center">Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-info" style="display: inline-block; font-size: 1.4rem;"><i class="fa fa-plus"></i></a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                Image
+            </th>
+            <th>
+                Brand
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @item.Description.EllipseText(50)
+                </td>
+                <td>
+                    <div>
+                        <img src="assets/images/shop/@item.ProductImages.FirstOrDefault(pi=>pi.IsMain).ImagePath" style="width: 100%; object-fit: cover; height: 125px;" />
+                    </div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Brand.BrandName)
+                </td>
+                <td>
+                    @item.CreatedDate.ToString("dd.MM.yyyy HH:mm:ss")
+                </td>
+                <td>
+                    @item.UpdatedDate?.ToString("dd.MM.yyyy HH:mm:ss")
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" style="width: 50px;" class="btn btn-warning"><i class="fas fa-pen"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.Id" style="width: 50px;" class="btn btn-primary"><i class="fas fa-info"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" style="width: 50px;" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

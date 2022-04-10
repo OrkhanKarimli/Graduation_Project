@@ -1,0 +1,48 @@
+﻿@model IEnumerable<MaleFashion.eCommerce.WebUI.Models.Entity.Brand>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-center">Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-info" style="display: inline-block; font-size: 1.4rem;"><i class="fa fa-plus"></i></a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BrandName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BrandName)
+                </td>
+                <td>
+                    @item.CreatedDate.ToString("dd.MM.yyyy HH:mm:ss")
+                </td>
+                <td>
+                    @item.UpdatedDate?.ToString("dd.MM.yyyy HH:mm:ss")
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning" style="width: 100px;">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary" style="width: 100px;">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" style="width: 100px;">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

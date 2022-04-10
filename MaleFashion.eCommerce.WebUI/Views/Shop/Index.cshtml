@@ -1,0 +1,319 @@
+﻿@inject FashionDbContext db;
+@model ShopViewModel
+
+@{
+    ViewData["Title"] = "Shop";
+
+    // Projection
+    var filteredDiffProducts = Model.DiscountProductViewModel.Select(d => new { d.ProductId, d.Price, d.PriceNew, d.CampaignTitle, d.Title, d.Discount, d.ProductImages }).Distinct();
+}
+
+@section css{
+    <style>
+        .toast-success {
+            background-color: #78e08f !important;
+        }
+
+        .basket-a, .price {
+            visibility: visible !important;
+        }
+    </style>
+}
+
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Shop</h4>
+                    <div class="breadcrumb__links">
+                        <a href="index-2.html">Home</a>
+                        <span>Shop</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="shop spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="shop__sidebar">
+                    <div class="shop__sidebar__search">
+                        <form asp-action="Index" asp-controller="Shop">
+                            <input type="text" name="searchShop" placeholder="Search..." />
+                            <button type="submit">
+                                <span class="icon_search"></span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="shop__sidebar__accordion">
+                        <div class="accordion" id="accordionExample">
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
+                                </div>
+                                <div id="collapseOne"
+                                     class="collapse show"
+                                     data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__categories">
+                                            <ul class="nice-scroll">
+                                                @foreach (Category item in Model.Categories)
+                                                {
+                                                    <li><a asp-action="Index" asp-controller="Shop" asp-route-category="@item.Name">@item.Name</a></li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseTwo">Branding</a>
+                                </div>
+                                <div id="collapseTwo"
+                                     class="collapse show"
+                                     data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__brand">
+                                            <ul>
+                                                @foreach (Brand item in Model.Brands)
+                                                {
+                                                    <li><a asp-action="Index" asp-controller="Shop" asp-route-brandName="@item.BrandName">@item.BrandName</a></li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
+                                </div>
+                                <div id="collapseThree"
+                                     class="collapse show"
+                                     data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__price">
+                                            <form asp-action="Index">
+                                                <input class="d-inline-block w-100" min="0" max="150" type="range" name="max" id="sop-range" />
+                                                <label class="d-flex align-content-center justify-content-between" for="sop-range">0 <strong>-</strong> <span></span></label>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseFour">Size</a>
+                                </div>
+                                <div id="collapseFour"
+                                     class="collapse show"
+                                     data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__size">
+                                            <form asp-action="Index" asp-controller="Shop">
+                                                @foreach (Size item in Model.Sizes)
+                                                {
+                                                    <label class="size-namew">
+                                                        @item.SizeName
+                                                        <input type="radio" name="size" class="size-radio" value="@item.SizeName">
+                                                    </label>
+                                                }
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseFive">Colors</a>
+                                </div>
+                                <div id="collapseFive"
+                                     class="collapse show"
+                                     data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__color">
+                                            <form asp-action="Index" asp-controller="Shop">
+                                                @foreach (Color item in Model.Colors)
+                                                {
+                                                    <label class="c-1" style="background-color: @item.ColorName;">
+                                                        <input type="radio" name="color" class="color-radio" value="@item.ColorName" />
+                                                    </label>
+                                                }
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseSix">Tags</a>
+                                </div>
+                                <div id="collapseSix"
+                                     class="collapse show"
+                                     data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__tags">
+                                            <form asp-action="Index" asp-controller="Shop">
+                                                @foreach (ProductTag item in Model.ProductTags)
+                                                {
+                                                    <a asp-action="Index" asp-controller="Shop" asp-route-productTag="@item.ProductTagName">@item.ProductTagName</a>
+                                                }
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="shop__product__option">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="shop__product__option__left">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="shop__product__option__right">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    @foreach (var item in filteredDiffProducts)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6 product-col">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="assets/images/shop/@item.ProductImages.FirstOrDefault(pi => pi.IsMain).ImagePath">
+                                    @if (item.CampaignTitle != null && item.Discount != null)
+                                    {
+                                        <span class="label" style="background-color: red;">@((int)item.Discount)% @item.CampaignTitle</span>
+                                    }
+                                </div>
+                                <div class="product__item__text">
+                                    <h6>@item.Title.EllipseText(50)</h6>
+                                    <a style="cursor: pointer;" class="add-cart" data-id="@item.ProductId">+ Add To Cart</a>
+                                    @if (item.PriceNew != null)
+                                    {
+                                        <h5 class="price-product" style="text-decoration: line-through; color: grey;">$@item.Price</h5>
+                                        <h5 class="pricenew-product">$@item.PriceNew</h5>
+                                        <a style="position: static; visibility: visible; opacity: 1;" asp-action="Index" asp-controller="ShopDetails" asp-route-id="@item.ProductId" class="badge bg-warning text-dark">Ətraflı</a>
+                                    }
+                                    else
+                                    {
+                                        <h5 class="price-product">$@item.Price</h5>
+                                        <a style="position: static; visibility: visible; opacity: 1;" asp-action="Index" asp-controller="ShopDetails" asp-route-id="@item.ProductId" class="badge bg-warning text-dark">Ətraflı</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script src="libs/jquery-cookie/jquery.cookie.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let value = $('#sop-range').val();
+            $('#sop-range').next('label').find('span').text(value);
+            $('#sop-range').on('input', (e) => {
+                let value = $(e.currentTarget).val();
+                $(e.currentTarget).next('label').find('span').text(value);
+            });
+
+            $('#sop-range').change((e) => {
+                $(e.currentTarget).closest('form').trigger('submit');
+            });
+
+            $('.color-radio').change(function () {
+                $(this).parent().parent().submit();
+            });
+
+            $('.size-namew').click(function () {
+                $(this).find('input').trigger("change");
+                $(this).parent().submit();
+            });
+
+            //Basket Logic
+            let priceEl = $('.price');
+            let priceVal = parseFloat($('.price').text().replace("$", ""));
+            let basket = $('.header__nav__option span');
+
+            //Get Items' Price
+            let bagTotal = $.cookie("bagTotal");
+            let bagFromCookie = $.cookie("bag");
+
+            if (bagFromCookie == '' || bagTotal == '0.00') {
+                $.removeCookie("bag", { path: '/' });
+                $.removeCookie("bagTotal", { path: '/' });
+
+                $.removeCookie("bag", { path: '/temp' });
+                $.removeCookie("bagTotal", { path: '/temp' });
+            }
+
+            if (bagTotal != undefined && bagFromCookie != undefined) {
+                $(priceEl).text(`$${bagTotal}`);
+                priceVal = parseFloat($('.price').text().replace("$", ""));
+                let bagTotalArr = bagFromCookie.split(',');
+                $(basket).text(bagTotalArr.length);
+            }
+
+            $('.add-cart').click(function (e) {
+                let data = $(e.currentTarget).data('id');
+
+                let bags = $.cookie('bag');
+
+                if (bags == null) {
+                    bags = [];
+                }
+                else {
+                    bags = bags.split(',').map(v => parseInt(v));
+                }
+
+                if (bags.indexOf(data) != -1) {
+                    toastr.error("Bu məhsul artıq səbətdə var!", "Diqqət!");
+                }
+                else {
+                    bags.push(data);
+                    toastr.success("Məhsul uğurla səbətə əlavə olundu!", "Uğurlu!");
+
+                    $.cookie('bag', bags.toString(), { expires: 365 });
+
+                    if (bags.length <= 9) {
+                        $(basket).text(bags.length);
+                    } else {
+                        $(basket).text('9+');
+                    }
+
+                    let priceProduct = $(this).next('.price-product');
+                    let priceNewProduct = $(this).parent().find('.pricenew-product');
+
+                    priceProduct = parseFloat($(priceProduct).text().replace("$", "").replace(",", "."));
+                    priceNewProduct = parseFloat($(priceNewProduct).text().replace("$", "").replace(",", "."));
+
+
+                    if (!isNaN(priceNewProduct)) {
+                        priceVal = priceVal + priceNewProduct;
+                        $(priceEl).text(`$${priceVal.toFixed(2)}`);
+                        $.cookie("bagTotal", $(priceEl).text().split('$')[1], { expires: 365 });
+                    }
+                    else {
+                        priceVal = priceVal + priceProduct;
+                        $(priceEl).text(`$${priceVal.toFixed(2)}`);
+                        $.cookie("bagTotal", $(priceEl).text().split('$')[1], { expires: 365 });
+                    }
+                }
+            });
+        });
+    </script>
+}

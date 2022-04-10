@@ -1,0 +1,236 @@
+﻿@{
+    ViewData["Title"] = "Chat SignalR";
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+        SignalR Application
+    </title>
+
+    <link rel="stylesheet" href="~/assets/sources/css/bootstrap.min.css">
+
+    <style>
+        .input-group.input-group-multiline {
+            flex-direction: column;
+            margin-bottom: 0 !important;
+        }
+
+            .input-group.input-group-multiline > .input-group-prepend > .input-group-text {
+                width: 100%;
+                border-radius: .2rem .2rem 0 0;
+                margin-right: 1px;
+            }
+
+            .input-group.input-group-multiline > textarea.form-control {
+                border-radius: 0 0 .2rem .2rem;
+                resize: none;
+                border-top: none;
+            }
+
+        .nice-scroll {
+            height: 500px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-3 mb-3">
+        <div class="row">
+            <div class="col">
+                <form class="card">
+                    <div class="card-header">
+                        SignalR nümunə
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="chat-email-label">E-mail</span>
+                            </div>
+                            <input id="chat-email" type="text" class="form-control" placeholder="Kimə göndəriləcək" aria-label="Bura sinizi yazın" aria-describedby="chat-email-label">
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="chat-email-label">Qrup adi</span>
+                            </div>
+                            <input id="chat-group" type="text" class="form-control"
+                                   placeholder="Qrupa qosul" aria-label="Bura sinizi yazın" aria-describedby="chat-email-label">
+                            <button type="button" class="btn btn-primary" id="btnJoinGroup">Qrupa Qosul</button>
+                        </div>
+
+                        <div class="input-group input-group-multiline input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="chat-message-label">Mesajınız</span>
+                            </div>
+                            <textarea class="form-control w-100" id="chat-message" aria-describedby="chat-message-label" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted" style="display: flex;align-items: baseline;justify-content: flex-end;">
+                        <div class="input-group mr-3" id="client">
+                            <input type="text" class="form-control" id="eMail" value="zakirer@code.edu.az" placeholder="E-mailinizi qeyd edin" aria-label="E-mailinizi qeyd edin"
+                                   aria-describedby="btnConnect">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button"
+                                        id="btnConnect">
+                                    Qoşul
+                                </button>
+                            </div>
+                        </div>
+                        <button type="reset" class="btn btn-warning mr-1">Təmizlə</button>
+                        <button type="button" class="btn btn-primary" id="btnSend">Göndər</button>
+                        <button id="sendToGroup" type="button" class="btn btn-primary">
+                            Qrupa göndər
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col nice-scroll">
+                <div class="list-group" id="messages">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/assets/sources/js/jquery-3.3.1.min.js"></script>
+    <script src="~/libs/microsoft-signalr/signalr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#btnConnect').click(function () {
+                let userEmail = $('#eMail').val();
+
+                if (userEmail.length < 1) {
+                    alert("EMail inputunu boş qoymaq olmaz!");
+                    return;
+                }
+
+                $.connection = new signalR.HubConnectionBuilder()
+                    .configureLogging(signalR.LogLevel.None)
+                    .withUrl(`/chat?email=${userEmail}`).build();
+
+                // QueryString ile mail inputunun value'sunu gonderirik.
+
+                $.connection.on('sayhello', function (msg) {
+                    alert(`${msg}`);
+                });
+
+
+                $.connection.on('mesajgeldi', function (tomail, tomsj) {
+                    alert(`${tomail}, ${tomsj}`);
+                })
+
+                $.connection.on('groupaQoshulma', function (userMail, groupName) {
+                    alert(`${userMail} adlı istifadəçi , ${groupName} adlı
+                                                 qrupa qoşuldu.`);
+                })
+
+                $.connection.on('groupaGonderenXaricMesajiGostermek',
+                    function (from, chatMsg) {
+                        alert(`${from} adlı istifadəçi , ${chatMsg} - dedi.`);
+                    });
+
+                $.connection.start().then(function () {
+                    console.log("Connected!");
+                })
+                    .catch(function (ex) { console.log(ex); });
+            });
+
+            $('#btnSend').on('click', function () {
+
+                let toMail = $('#chat-email').val();
+
+                let toMsg = $('#chat-message').val();
+
+                if (toMail.length < 1) {
+                    alert("Göndəriləcək E-mail ünvanını doldurun!");
+                    return;
+                }
+
+                if (toMsg.length < 1) {
+                    alert("Mesaj ünvanını doldurun!");
+                    return;
+                }
+
+                if ($.connection == null) {
+                    alert("Çata qoşulun!");
+                    return;
+                }
+
+                $.connection.invoke("send", toMail, toMsg);
+
+            })
+
+            $('#btnJoinGroup').on('click', function () {
+
+                let chatGroupName = $('#chat-group').val();
+
+                if (chatGroupName.length < 1) {
+                    alert("Qrupun adını doldurun!");
+                    return;
+                }
+
+                let ourMail = $('#eMail').val();
+
+                if (ourMail.length < 1) {
+                    alert("Göndərən istifadəçinin mail yerini doldurun!");
+                    return;
+                }
+
+                if ($.connection == null) {
+                    alert("Çata qoşulun!");
+                    return;
+                }
+
+                $.connection.invoke("jointogroup", ourMail, chatGroupName);
+
+
+            });
+        })
+
+        $('#sendToGroup').click(function () {
+            let chatGroupName = $('#chat-group').val();
+
+            if (chatGroupName.length < 1) {
+                alert("Qrupun adını doldurun!");
+                return;
+            }
+
+            let ourMail = $('#eMail').val();
+
+            if (ourMail.length < 1) {
+                alert("Göndərən istifadəçinin mail yerini doldurun!");
+                return;
+            }
+
+            let chatMessage = $('#chat-message').val();
+
+            if (chatMessage.length < 1) {
+                alert("Mesaj yerini doldurun!");
+                return;
+            }
+
+            if ($.connection == null) {
+                alert("Çata qoşulun!");
+                return;
+            }
+
+            $.connection.invoke("sendtogroup", chatGroupName, chatMessage);
+
+
+        });
+
+    </script>
+
+
+
+</body>
+</html>
+

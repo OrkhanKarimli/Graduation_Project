@@ -1,0 +1,104 @@
+﻿@model AppUser
+
+@{
+    ViewData["Title"] = "Edit Personal Info";
+}
+
+@section cssplugins{
+    <link rel="stylesheet" href="libs/single-image/jquery.image-input.css" />
+}
+
+<h1 class="text-center">Edit Personal Info</h1>
+
+<hr />
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Surname" class="control-label"></label>
+                <input asp-for="Surname" class="form-control" />
+                <span asp-validation-for="Surname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @*<label asp-for="ImagePath" class="control-label"></label>
+                    <input asp-for="ImagePath" class="form-control" />
+                    <span asp-validation-for="ImagePath" class="text-danger"></span>*@
+                <image asp-caption="Profile Picture" asp-for="image" asp-path="/admin-assets/img/users/@Model.ImagePath"></image>
+            </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobName" class="control-label"></label>
+                <input asp-for="JobName" class="form-control" />
+                <span asp-validation-for="JobName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Age" class="control-label"></label>
+                <input asp-for="Age" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <input asp-for="NormalizedUserName" type="hidden" class="form-control" />
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <input asp-for="NormalizedEmail" type="hidden" class="form-control" />
+
+            <div class="form-group form-check" style="visibility: hidden; position: fixed; right: -25%;">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="EmailConfirmed" /> @Html.DisplayNameFor(model => model.EmailConfirmed)
+                </label>
+            </div>
+
+            <input asp-for="PasswordHash" type="hidden" class="form-control" />
+            <input asp-for="SecurityStamp" type="hidden" class="form-control" />
+            <input asp-for="ConcurrencyStamp" type="hidden" class="form-control" />
+            <input asp-for="PhoneNumber" type="hidden" class="form-control" />
+
+            <div class="form-group form-check" style="visibility: hidden; position: fixed; right: -25%;">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="PhoneNumberConfirmed" /> @Html.DisplayNameFor(model => model.PhoneNumberConfirmed)
+                </label>
+            </div>
+            <div class="form-group form-check" style="visibility: hidden; position: fixed; right: -25%;">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="TwoFactorEnabled" /> @Html.DisplayNameFor(model => model.TwoFactorEnabled)
+                </label>
+            </div>
+            <input asp-for="LockoutEnd" type="hidden" class="form-control" />
+            <div class="form-group form-check" style="visibility: hidden; position: fixed; right: -25%;">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="LockoutEnabled" /> @Html.DisplayNameFor(model => model.LockoutEnabled)
+                </label>
+            </div>
+            <input asp-for="AccessFailedCount" type="hidden" class="form-control" />
+            <div class="form-group mb-5">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" asp-controller="PersonalSide" class="btn btn-danger">Return Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section jsplugins{
+    <script src="libs/single-image/jquery.image-input.js"></script>
+}

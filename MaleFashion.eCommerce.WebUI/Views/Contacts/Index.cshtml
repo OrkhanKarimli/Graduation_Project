@@ -1,0 +1,125 @@
+﻿@inject FashionDbContext db;
+@model ContactAndMessageViewModel;
+
+@{
+    ViewData["Title"] = "Contacts";
+
+    string serializedData = TempData.Peek("Data") as string;
+
+    List<int> numbers = JsonConvert.DeserializeObject<List<int>>(serializedData);
+
+    Map map = db.Maps.Find(1);
+}
+
+@section css{
+    <style>
+        .numbers {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+    </style>
+}
+
+@*TempData Object Transfer*@
+<div class="numbers">
+    @foreach (int item in numbers)
+    {
+        <p>
+            @item
+        </p>
+    }
+</div>
+@*TempData Object Transfer*@
+
+<div class="map">
+    @Html.Raw(map.Content)
+</div>
+
+<div class="modal d-none" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center">Uğurlu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Mesajınız müvəffəqiyyətlə bizə göndərilmişdir!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning close-modal-btn" data-bs-dismiss="modal">Bağlamaq</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="contact spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="contact__text">
+                    <div class="section-title">
+                        <span>Information</span>
+                        <h2>@Model.Contact.Title</h2>
+                        <p>
+                            @Model.Contact.Description
+                        </p>
+                    </div>
+                    <ul>
+                        @foreach (var item in Model.Contact.Departments)
+                        {
+                            <li>
+                                <h4>@item.City</h4>
+                                <p>
+                                    @item.Address <br />@item.PhoneNumber
+                                </p>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <partial name="~/Views/Shared/Partials/_ContactMessage.cshtml" model="@Model">
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script src="libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="libs/jquery-validate/jquery.validate.min.js"></script>
+    <script src="libs/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        let contactForm = $('#contact-form');
+        let modal = $('.modal');
+
+        $(contactForm).submit((e) => {
+            e.preventDefault();
+
+            let fData = $(e.currentTarget).serialize();
+
+            if ($('#contact-form input').val().length > 0 && $('#contact-form textarea').val().length) {
+                $.ajax({
+                    url: '@Url.Action("SendMessage","Contacts")',
+                    type: "POST",
+                    data: fData,
+                    success: function (successmsg) {
+                        $(modal).removeClass('d-none').addClass('d-block');
+                        $('#contact-form input').val('');
+                        $('#contact-form textarea').val('');
+                    },
+                    error: function (errormsg) {
+                        alert("Xəta baş verdi bir neçə dəqiqəyə yenidən cəhd edin!");
+                    }
+                });
+            }
+        });
+
+
+        let closeModalBtn = $('.close-modal-btn');
+
+        $(closeModalBtn).on('click', function () {
+            $(this).closest('.modal').removeClass('d-block').addClass('d-none');
+        });
+    </script>
+}

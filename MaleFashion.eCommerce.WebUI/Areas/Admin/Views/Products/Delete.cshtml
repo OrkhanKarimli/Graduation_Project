@@ -1,0 +1,59 @@
+﻿@model MaleFashion.eCommerce.WebUI.Models.Entity.Product
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="text-center">Delete</h1>
+
+<h3 class="text-center">Are you sure you want to delete this?</h3>
+<div>
+    <h4 class="text-center">Product</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            Image
+        </dt>
+        <dd class="col-sm-10">
+            <div style=" width: 10%;">
+                <img src="assets/images/shop/@Model.ProductImages.FirstOrDefault(pi=>pi.IsMain).ImagePath" style="width: 100%; object-fit: cover; height: 125px;" />
+            </div>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Brand)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Brand.BrandName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UpdatedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UpdatedDate)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete" class="mb-5">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-danger">Back to List</a>
+    </form>
+</div>

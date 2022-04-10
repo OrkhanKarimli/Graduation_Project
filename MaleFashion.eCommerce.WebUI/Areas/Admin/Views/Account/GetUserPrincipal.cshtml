@@ -1,0 +1,47 @@
+﻿@model ClaimsPrincipalViewModel;
+
+@{
+    ViewData["Title"] = "Get User Principal";
+}
+
+@section css {
+    <style>
+        #checkbox-claim {
+            cursor: pointer;
+        }
+    </style>
+}
+
+<h1 class="text-center">Get User Principal</h1>
+
+<table class="table table-primary table-hover">
+    <thead>
+        <tr>
+            <th>Principal Status: </th>
+            <th>Applied Name: </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (KeyValuePair<string, bool> item in Model.Principals)
+        {
+            <tr>
+                <td>
+                    <form method="post" id="form-claim" asp-action="SetUserPrincipal">
+                        <input name="applied" id="checkbox-claim" type="checkbox" @(item.Value ? "checked" : "") />
+                        <input type="hidden" name="userId" value="@Model.User.Id" />
+                        <input name="principalName" type="hidden" value="@item.Key" />
+                    </form>
+                </td>
+                <td>@item.Key</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section js {
+    <script>
+        $('#form-claim input[type="checkbox"]').on('change', function (e) {
+            $(e.currentTarget).closest('form').trigger('submit');
+        });
+    </script>
+}

@@ -1,0 +1,85 @@
+﻿@model IEnumerable<MaleFashion.eCommerce.WebUI.Models.Entity.AppInfo>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-center">Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-info"><i class="fa fa-plus"></i></a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.HeaderLogoPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FooterLogoPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CardsLogoPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FooterSiteInfo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="~/assets/images/index/@item.HeaderLogoPath" />
+                </td>
+                <td>
+                    <img src="~/assets/images/index/@item.FooterLogoPath" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <img src="~/assets/images/index/@item.CardsLogoPath" />
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContactTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContactDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FooterSiteInfo)
+                </td>
+                <td>
+                    @item.CreatedDate.ToString("dd.MM.yyyy HH:mm:ss")
+                </td>
+                <td>
+                    @item.UpdatedDate?.ToString("dd.MM.yyyy HH:mm:ss")
+                </td>
+                <td>
+                    <a class="btn btn-warning edit-btn" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-pen"></i></a>
+                    <a class="btn btn-secondary details-btn" style="padding: .375rem 15px;" asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
+                    <a class="btn btn-danger remove-btn" asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

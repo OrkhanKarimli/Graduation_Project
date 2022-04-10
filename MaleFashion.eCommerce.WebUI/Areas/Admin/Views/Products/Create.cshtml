@@ -1,0 +1,62 @@
+﻿@model MaleFashion.eCommerce.WebUI.Models.Entity.Product
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@section cssplugins{
+    <link rel="stylesheet" href="libs/multiply-image-input/imager.css" />
+}
+
+<h1 class="text-center">Create</h1>
+
+<h4 class="text-center">Product</h4>
+<hr />
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Images: </label>
+                <div style="width: 600px;" class="imager-container" id="viewer1" name="files"></div>
+            </div>
+            <div class="form-group">
+                <label asp-for="BrandId" class="control-label">Brand</label>
+                <select asp-for="BrandId" class="form-control" asp-items="ViewBag.BrandId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mb-5" style="margin-left: 25px;">
+    <a asp-action="Index" class="btn btn-danger">Back to List</a>
+</div>
+
+@section jsplugins{
+    <script src="libs/multiply-image-input/imager.js"></script>
+    <script src="libs/multiply-image-input/jquery.image-input.js"></script>
+}
+@section js{
+    <script>
+        $('#viewer1').imgadd({
+            tnWidth: '120px',
+            tnHeight: '120px',
+            fontSize: '55px',
+            plusInnerHtml: '',
+            plusBtnClass: undefined
+        });
+    </script>
+}

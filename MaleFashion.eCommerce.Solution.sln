@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaleFashion.eCommerce.WebUI", "MaleFashion.eCommerce.WebUI\MaleFashion.eCommerce.WebUI.csproj", "{6F50B139-786B-4E43-BD91-546C57CEC9B9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F50B139-786B-4E43-BD91-546C57CEC9B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F50B139-786B-4E43-BD91-546C57CEC9B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F50B139-786B-4E43-BD91-546C57CEC9B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F50B139-786B-4E43-BD91-546C57CEC9B9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D74CE7E-F713-40C4-9E0C-A7347A4E09F7}
+	EndGlobalSection
+EndGlobal

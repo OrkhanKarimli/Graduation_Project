@@ -1,0 +1,42 @@
+﻿@model MaleFashion.eCommerce.WebUI.Models.Entity.ProductCampaignCollection
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="text-center">Details</h1>
+
+<div>
+    <h4 class="text-center">Produc tCampaign Collection</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            Product:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProductCollection.Product.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Campaign)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Campaign.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PriceNew)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PriceNew)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-danger">Back to List</a>
+</div>

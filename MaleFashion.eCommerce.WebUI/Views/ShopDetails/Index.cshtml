@@ -1,0 +1,168 @@
+﻿@model IEnumerable<DiscountProductViewModel>
+
+@{
+    ViewData["Title"] = "Shop Details";
+}
+
+@section css{
+    <style>
+        .basket-a, .price {
+            visibility: visible !important;
+        }
+    </style>
+}
+
+<section class="shop-details">
+    <div class="product__details__pic">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__details__breadcrumb">
+                        <a href="index.html">Home</a>
+                        <a href="shop.html">Shop</a>
+                        <span>Product Details</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <ul class="nav nav-tabs" role="tablist">
+                        @foreach (ProductImage item in Model.FirstOrDefault()?.ProductImages.Where(pi => pi.IsMain == false))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link active"
+                                   data-toggle="tab"
+                                   href="#tabs-1"
+                                   role="tab">
+                                    <div class="product__thumb__pic set-bg"
+                                         data-setbg="assets/images/shop/@item.ImagePath"></div>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-lg-6 col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img src="assets/images/shop/@Model.FirstOrDefault()?.ProductImages.FirstOrDefault(pi=>pi.IsMain)?.ImagePath"
+                                     alt="" />
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img src="assets/images/shop-details/product-big-3.png"
+                                     alt="" />
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-3" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img src="assets/images/shop-details/product-big.png"
+                                     alt="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="product__details__content">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-8">
+                    <div class="product__details__text">
+                        <h4>@Model.FirstOrDefault()?.Title</h4>
+                        @if (Model.FirstOrDefault()?.PriceNew != null)
+                        {
+                            <h3>$@Model.FirstOrDefault()?.PriceNew <span>@Model.FirstOrDefault()?.Price</span></h3>
+                        }
+                        else
+                        {
+                            <h3>$@Model.FirstOrDefault()?.Price</h3>
+                        }
+                        <div class="product__details__option">
+                            <div class="product__details__option__size">
+                                <span>Size:</span>
+                                @foreach (DiscountProductViewModel item in Model.OrderBy(m => m.SizeName))
+                                {
+                                    <label for="x @item.SizeName">
+                                        @item.SizeName
+                                        <input type="radio" id=" @item.SizeName" />
+                                    </label>
+                                }
+                            </div>
+                            <div class="product__details__option__color">
+                                <span>Color:</span>
+                                <label class="c-1" for="sp-1" style="background-color: @Model.FirstOrDefault()?.ColorName;">
+                                    <input type="radio" id="sp-1" />
+                                </label>
+                            </div>
+                        </div>
+                        <div class="product__details__cart__option">
+                            @*<a class="primary-btn add-cart" style="cursor: pointer;color: white;" data-id="@Model.FirstOrDefault()?.Id">add to cart</a>*@
+                            <a asp-action="Index" asp-controller="Shop" class="primary-btn" style="background-color: crimson;">Back To Shop</a>
+                        </div>
+                        <div class="product__details__last__option">
+                            <h5><span>Guaranteed Safe Checkout</span></h5>
+                            <img src="assets/images/shop-details/details-payment.png"
+                                 alt="" />
+                            <ul>
+                                <li><span>Categories:</span> @Model.FirstOrDefault()?.CategoryName</li>
+                                <li><span>Tag:</span> @Model.FirstOrDefault()?.ProductTagName</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__details__tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active"
+                                   data-toggle="tab"
+                                   href="#tabs-5"
+                                   role="tab">Description</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                <div class="product__details__tab__content" style="padding: 10% 0;">
+                                    <div class="product__details__tab__content__item">
+                                        <h5>Products Infomation</h5>
+                                        <p>
+                                            @Model.FirstOrDefault()?.Description
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script src="libs/jquery-cookie/jquery.cookie.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            //Basket Logic
+            let priceEl = $('.price');
+            let priceVal = parseFloat($('.price').text().replace("$", ""));
+            let basket = $('.header__nav__option span');
+
+            //Get Items' Price
+            let bagTotal = $.cookie("bagTotal");
+            let bagFromCookie = $.cookie("bag");
+
+            if (bagTotal != undefined && bagFromCookie != undefined) {
+                $(priceEl).text(`$${bagTotal}`);
+                priceVal = parseFloat($('.price').text().replace("$", ""));
+                let bagTotalArr = bagFromCookie.split(',');
+                $(basket).text(bagTotalArr.length);
+            }
+        });
+    </script>
+}

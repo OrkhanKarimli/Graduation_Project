@@ -1,0 +1,351 @@
+﻿@model BlogDetailsViewModel;
+
+@{
+    ViewData["Title"] = "Blog Details";
+}
+
+@section css{
+    <style>
+        .blog__details__share a {
+            display: inline-block;
+            color: white !important;
+            cursor: pointer
+        }
+    </style>
+}
+
+<section class="blog-hero spad">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-9 text-center">
+                <div class="blog__hero__text">
+                    <h2>
+                        @Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.Title
+                    </h2>
+                    <ul>
+                        <li>By @Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.AuthorName @Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.AuthorSurname</li>
+                        <li>@Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.CreatedDate.ToString("MMMM dd, yyyy")</li>
+                        <!-- ZR -->
+                        @if (Model.Likes == null)
+                        {
+                            <li>0 Likes</li>
+                        }
+                        else
+                        {
+                            <li>@Model.Likes.Count() Likes</li>
+                        }
+
+
+                        @if (Model.Unlikes == null)
+                        {
+                            <li>0 Unlikes</li>
+                        }
+                        else
+                        {
+                            <li>@Model.Unlikes.Count() Unlikes</li>
+                        }
+                        <!-- ZR -->
+                        @if (Model.Comments == null)
+                        {
+                            <li>0 Comments</li>
+                        }
+                        else
+                        {
+                            <li>@Model.Comments.Count() Comments</li>
+                        }
+
+                        @if (Model.Comments == null)
+                        {
+                            <li>0 Replies</li>
+                        }
+                        else
+                        {
+                            <li>@Model.Replies.Count() Replies</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="blog-details">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-12">
+                <div class="blog__details__pic">
+                    <img src="assets/images/blog/@Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.ImagePath" alt="" />
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div data-aos="fade-up" class="blog__details__content">
+                    <div class="blog__details__share">
+                        <span>share</span>
+                        <ul>
+                            <li>
+                                <a onclick="FacebookRedirect()"><i class="fa fa-facebook"></i></a>
+                            </li>
+                            <li>
+                                <a onclick="TwitterRedirect()" class="twitter">
+                                    <i class="fa fa-twitter"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a onclick="YouTubeRedirect()" class="youtube">
+                                    <i class="fa fa-youtube-play"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a onclick="LinkedInRedirect()" class="linkedin">
+                                    <i class="fa fa-linkedin"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-aos="fade-right" class="blog__details__text">
+                        @Html.Raw(Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.Description)
+                    </div>
+                    <div data-aos="fade-left" class="blog__details__quote">
+                        <i class="fa fa-quote-left"></i>
+                        <p>
+                            @Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.Aphorism.Content
+                        </p>
+                        <h6>_ @Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.Aphorism.Author _</h6>
+                    </div>
+                    <div data-aos="fade-up-left" class="blog__details__option">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="blog__details__author">
+                                    <div class="blog__details__author__pic">
+                                        <img src="admin-assets/img/users/@Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.AuthorImagePath"
+                                             alt="" />
+                                    </div>
+                                    <div class="blog__details__author__text">
+                                        <h5>@Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.AuthorName @Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.AuthorSurname</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="blog__details__tags">
+                                    @foreach (var item in Model.BlogDetailsTagsCollections)
+                                    {
+                                        <a href="/blog/index/?tagName=@item.Tag.TagName">#@item.Tag.TagName</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-aos="flip-up" class="blog__details__btns">
+                        <div class="row">
+                            @if (Model.PrevBlog != null)
+                            {
+                                <div class="col-lg-6 col-md-6 col-sm-6" style="min-height: 400px;">
+                                    <a asp-action="Index" asp-route-id="@Model.PrevBlog.Id" class="blog__details__btns__item">
+                                        <p><span class="arrow_left"></span> Previous Pod</p>
+                                        <h5>
+                                            @Model.PrevBlog.Title.EllipseText(25)
+                                        </h5>
+                                    </a>
+                                </div>
+                            }
+                            @if (Model.NextBlog != null)
+                            {
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <a asp-action="Index" asp-route-id="@Model.NextBlog.Id"
+                                       class="
+                        blog__details__btns__item
+                        blog__details__btns__item--next
+                      ">
+                                        <p>Next Pod <span class="arrow_right"></span></p>
+                                        <h5>@Model.NextBlog.Title.EllipseText(25)</h5>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div data-aos="fade-up" class="blog__details__comment mb-2">
+                            <h4>Leave A Comment</h4>
+                            <form method="post" id="comment-form">
+                                <div class="row">
+                                    <!-- <div class="col-lg-4 col-md-4">
+                                      <input type="text" placeholder="Name">
+                                    </div>
+                                    <div class="col-lg-4 col-md-4">
+                                      <input type="text" placeholder="Email">
+                                    </div>
+                                    <div class="col-lg-4 col-md-4">
+                                      <input type="text" placeholder="Phone">
+                                    </div> -->
+                                    <div class="col-lg-12 text-center post-side">
+                                        <input type="hidden" name="BlogId" value="@Model.BlogDetailsTagsCollections.FirstOrDefault().Blog.Id" />
+                                        <textarea placeholder="Comment" name="Content"></textarea>
+                                        <button type="submit" class="site-btn">
+                                            Post Comment
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="comment-auth mb-2 d-flex justify-content-center align-items-center py-3" style="border: 1px solid teal;">
+                            <a asp-action="SignIn" asp-controller="Account" asp-route-returnUrl="@Context.Request.Path.ToString()" style="color: teal;">Comment yazmaq üçün sistemə giriş edin.</a>
+                        </div>
+                    }
+                    @foreach (var item in Model.Comments)
+                    {
+                        <div data-aos="fade-up" class="blog-details-comments-div">
+                            <div class="row">
+                                <div class="col-lg-12 comments">
+                                    <div class="comments-author-side col-lg-2">
+                                        <div class="img-div">
+                                            <img src="admin-assets/img/users/@item.AuthorImagePath"
+                                                 alt="Author" />
+                                        </div>
+                                        <a href="#" class="comments-author-name">@item.AuthorName @item.AuthorSurname</a>
+                                    </div>
+                                    <div class="comments-content-side col-lg-8">
+                                        <p class="comments-content">
+                                            @item.Content
+                                        </p>
+                                        <div class="comments-content-tools">
+                                            <a class="content-tools-reply"><i class="fas fa-reply"></i> Cavabla</a>
+                                        </div>
+                                        <div class="reply-side mt-2">
+                                            @if (User.Identity.IsAuthenticated)
+                                            {
+                                                <form method="POST" class="reply-form">
+                                                    <div class="form-group">
+                                                        <input type="hidden" name="replyBlogId" value="@item.BlogId" />
+                                                        <input type="hidden" name="replyCommentId" value="@item.Id" />
+                                                        <div class="form-group">
+                                                            <label for="reply-content">
+                                                                Write your reply:
+                                                            </label>
+                                                            <input type="text"
+                                                                   class="form-control"
+                                                                   name="replyContent"
+                                                                   placeholder="What do you think?" />
+                                                        </div>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-warning mt-2">
+                                                        Publish
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <div class="reply-auth mb-2 d-flex justify-content-center align-items-center py-3" style="border: 1px solid teal;">
+                                                    <a asp-action="SignIn" asp-controller="Account" asp-route-returnUrl="@Context.Request.Path.ToString()" style="color: teal;">Cavab yazmaq üçün sistemə giriş edin.</a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="comments-publish-date col-lg-2">
+                                        <p class="publish-date">
+                                            <i class="fas fa-calendar-day"></i> @item.CommentDate.ToString("dd MMMM, yyyy")
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mx-auto col-lg-8">
+                                    @foreach (Reply reply in item.Replies)
+                                    {
+                                        <div class="col-lg-12" style="border: 1px solid #000000;">
+                                            <div class="row">
+                                                <div class="comments-author-side col-lg-2">
+                                                    <div class="img-div">
+                                                        <img src="admin-assets/img/users/@reply.AuthorImagePath"
+                                                             alt="Author" />
+                                                    </div>
+                                                    <a href="#" class="comments-author-name">@reply.AuthorName @reply.AuthorSurname</a>
+                                                </div>
+                                                <div class="comments-content-side col-lg-6 d-flex align-items-center">
+                                                    <p class="comments-content">
+                                                        @reply.Content
+                                                    </p>
+                                                </div>
+                                                <div class="comments-publish-date col-lg-4">
+                                                    <p class="publish-date">
+                                                        @reply.ReplyDate.ToString("dd MMMM, yyyy")
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script src="assets/js/app.js"></script>
+
+    <script>
+        function FacebookRedirect() {
+            window.location.href = "https://www.fb.com";
+        }
+
+        function TwitterRedirect() {
+            window.location.href = "https://www.twitter.com";
+        }
+
+        function YouTubeRedirect() {
+            window.location.href = "https://www.youtube.com";
+        }
+
+        function LinkedInRedirect() {
+            window.location.href = "https://www.linkedin.com";
+        }
+
+        let commentForm = $('#comment-form');
+
+        $(commentForm).submit((e) => {
+            e.preventDefault();
+
+            //let blogId = $(e.currentTarget).closest('.blog__details__comment').data('blog-id');
+            //let content = $(e.currentTarget).find('textarea').val();
+
+            let formData = $(commentForm).serialize();
+
+            $.ajax({
+                url: '@Url.Action("Comment", "BlogDetails")',
+                type: "POST",
+                data: formData,
+                success: function (successMsg) {
+                    window.location.reload();
+                },
+                error: function (errorMsg) {
+
+                }
+            });
+        });
+
+        let replyForm = $('.reply-form');
+
+        $(replyForm).submit((e) => {
+            e.preventDefault();
+
+            let formData = $(e.currentTarget).serialize();
+
+            $.ajax({
+                url: '@Url.Action("Reply", "BlogDetails")',
+                type: "POST",
+                data: formData,
+                success: function (successMsg) {
+                    window.location.reload();
+                },
+                error: function (errorMsg) {
+
+                }
+            });
+        });
+    </script>
+}

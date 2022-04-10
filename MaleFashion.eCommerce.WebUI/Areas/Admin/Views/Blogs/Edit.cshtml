@@ -1,0 +1,62 @@
+﻿@model MaleFashion.eCommerce.WebUI.Models.Entity.Blog
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+@section cssplugins{
+    <link rel="stylesheet" href="libs/single-image/jquery.image-input.css" />
+}
+
+<h1 class="text-center">Edit</h1>
+
+<h4 class="text-center">Blog</h4>
+<hr />
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" id="editor"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @*<label asp-for="ImagePath" class="control-label"></label>
+                    <input asp-for="ImagePath" class="form-control" />
+                    <span asp-validation-for="ImagePath" class="text-danger"></span>*@
+                <image asp-caption="ImagePath" asp-path="/assets/images/blog/@Model.ImagePath" asp-for="image"></image>
+            </div>
+            <div class="form-group">
+                <label asp-for="AphorismId" class="control-label"></label>
+                <select asp-for="AphorismId" class="form-control" asp-items="ViewBag.AphorismId"></select>
+                <span asp-validation-for="AphorismId" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mb-5 ms-2">
+    <a asp-action="Index" class="btn btn-danger">Back to List</a>
+</div>
+
+@section jsplugins{
+    <script src="libs/single-image/jquery.image-input.js"></script>
+    <script src="libs/ckeditor5/ckeditor.min.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+}

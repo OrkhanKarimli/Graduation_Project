@@ -1,0 +1,121 @@
+﻿@model RegisterFormModel;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Qeydiyyat - İstifadəçi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="~/" />
+    <link rel="icon" type="image/png" href="login-assets/images/icons/favicon.ico" />
+
+    <link rel="stylesheet" type="text/css" href="login-assets/vendor/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="login-assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="login-assets/fonts/iconic/css/material-design-iconic-font.min.css">
+
+    <link rel="stylesheet" type="text/css" href="login-assets/vendor/animate/animate.css">
+
+    <link rel="stylesheet" type="text/css" href="login-assets/vendor/css-hamburgers/hamburgers.min.css">
+
+    <link rel="stylesheet" type="text/css" href="login-assets/vendor/animsition/css/animsition.min.css">
+
+    <link rel="stylesheet" type="text/css" href="login-assets/vendor/select2/select2.min.css">
+
+    <link rel="stylesheet" type="text/css" href="login-assets/vendor/daterangepicker/daterangepicker.css">
+
+    <link rel="stylesheet" type="text/css" href="login-assets/css/util.css">
+    <link rel="stylesheet" type="text/css" href="login-assets/css/main.css">
+
+    <meta name="robots" content="noindex, follow">
+</head>
+<body>
+    <div class="limiter">
+        <div class="container-login100" style="background-image: url('login-assets/images/bg-01.jpg');">
+            <div class="wrap-login100 p-l-55 p-r-55 p-t-45 p-b-54">
+                <form class="login100-form validate-form" method="post" asp-action="Register" asp-controller="Account">
+                    <div asp-validation-summary="ModelOnly"></div>
+                    <span class="login100-form-title p-b-49">
+                        Qeydiyyat pəncərəsi
+                    </span>
+                    <div class="wrap-input100 validate-input m-b-23" data-validate="Bu xana doldurulmalıdır!">
+                        <span class="label-input100">İstifadəçi adı: </span>
+                        <input class="input100" type="text" asp-for="Username" placeholder="Daxil edin">
+                        <span asp-validation-for="Username"></span>
+                        <span class="focus-input100" data-symbol="&#xf206;"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input m-b-23" data-validate="Bu xana doldurulmalıdır!">
+                        <span class="label-input100">Email: </span>
+                        <input class="input100" type="text" asp-for="Email" placeholder="Daxil edin">
+                        <span asp-validation-for="Email"></span>
+                        <span class="focus-input100" data-symbol="&#xf206;"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input" data-validate="Bu xana doldurulmalıdır!">
+                        <span class="label-input100">Şifrə: </span>
+                        <input class="input100" type="password" asp-for="Password" placeholder="Daxil edin">
+                        <span asp-validation-for="Password"></span>
+                        <span class="focus-input100" data-symbol="&#xf190;"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input" data-validate="Bu xana doldurulmalıdır!">
+                        <span class="label-input100">Şifrə təkrarı: </span>
+                        <input class="input100" type="password" asp-for="PasswordConfirm" placeholder="Daxil edin">
+                        <span asp-validation-for="PasswordConfirm"></span>
+                        <span class="focus-input100" data-symbol="&#xf190;"></span>
+                    </div>
+                    <div class="container-login100-form-btn">
+                        <div class="wrap-login100-form-btn">
+                            <div class="login100-form-bgbtn"></div>
+                            <button type="submit" class="login100-form-btn">
+                                Qeydiyyatdan keç
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex-col-c p-t-15">
+                        <a asp-action="SignIn" class="txt2">
+                            Daxil ol
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="dropDownSelect1"></div>
+
+    <script src="login-assets/vendor/jquery/jquery-3.2.1.min.js"></script>
+
+    <script src="login-assets/vendor/animsition/js/animsition.min.js"></script>
+
+    <script src="login-assets/vendor/bootstrap/js/popper.js"></script>
+    <script src="login-assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="login-assets/vendor/select2/select2.min.js"></script>
+
+    <script src="login-assets/vendor/daterangepicker/moment.min.js"></script>
+    <script src="login-assets/vendor/daterangepicker/daterangepicker.js"></script>
+
+    <script src="login-assets/vendor/countdowntime/countdowntime.js"></script>
+
+    <script src="libs/jquery-validate/jquery.validate.min.js"></script>
+    <script src="libs/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="login-assets/js/main.js"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-23581568-13');
+    </script>
+    <script defer src="../../../../static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"rayId":"68a39510d8650099","token":"cd0b4b3a733644fc843ef0b185f98241","version":"2021.8.1","si":10}'></script>
+</body>
+
+<!-- Mirrored from colorlib.com/etc/lf/Login_v4/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 06 Sep 2021 00:29:23 GMT -->
+</html>

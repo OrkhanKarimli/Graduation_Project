@@ -1,0 +1,72 @@
+﻿@model MaleFashion.eCommerce.WebUI.Models.Entity.AppInfo
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="text-center">Details</h1>
+
+<div>
+    <h4 class="text-center">AppInfo</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.HeaderLogoPath)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="assets/images/index/@Model.HeaderLogoPath" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FooterLogoPath)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="assets/images/index/@Model.FooterLogoPath" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CardsLogoPath)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="assets/images/index/@Model.CardsLogoPath" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ContactTitle)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ContactTitle)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ContactDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ContactDescription)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FooterSiteInfo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FooterSiteInfo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.CreatedDate.ToString("dd.MM.yyyy HH:mm:ss")
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UpdatedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.UpdatedDate?.ToString("dd.MM.yyyy HH:mm:ss")
+        </dd>
+    </dl>
+</div>
+<div class="mb-5">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit <i class="fas fa-pen"></i></a>
+    <a asp-action="Index" class="btn btn-danger">Back to List <i class="fas fa-undo-alt"></i></a>
+</div>

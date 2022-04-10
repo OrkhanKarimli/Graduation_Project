@@ -1,0 +1,78 @@
+﻿@model IEnumerable<MaleFashion.eCommerce.WebUI.Models.Entity.Aphorism>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="search-side">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4" style="border: 1px solid cadetblue; padding: 35px; border-radius: 5px;">
+                <form method="post">
+                    <h3>Search for aphorism here.</h3>
+                    <div class="form-group">
+                        <label for="author">Author: </label>
+                        <input class="form-control" type="text" name="author" id="author" />
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Content: </label>
+                        <input class="form-control" type="text" name="content" id="content" />
+                    </div>
+                    <button class="btn btn-info">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h1 class="text-center">Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-info" style="display: inline-block; font-size: 1.4rem;"><i class="fa fa-plus"></i></a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeletedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @item.CreatedDate.ToString("dd.MM.yyyy HH:mm:ss")
+                </td>
+                <td>
+                    @item.UpdatedDate?.ToString("dd.MM.yyyy HH:mm:ss")
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning" style="width: 100px;">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary" style="width: 100px;">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" style="width: 100px;">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

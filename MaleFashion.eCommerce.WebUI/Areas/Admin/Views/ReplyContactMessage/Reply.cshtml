@@ -1,0 +1,25 @@
+﻿@model ContactMessage
+
+@{
+    ViewData["Title"] = "Reply";
+}
+
+<div class="row justify-content-center mb-5">
+    <div class="col-md-8">
+        <form method="post">
+            <input type="hidden" asp-for="Id" />
+            <input asp-for="Name" class="form-control mt-3" readonly />
+            <input asp-for="EmailAddres" class="form-control mt-3" readonly />
+            <textarea asp-for="Content" class="form-control mt-3" readonly></textarea>
+
+            <div class="form-group mt-3">
+                <label asp-for="Reply"></label>
+                <input asp-for="Reply" class="form-control" />
+            </div>
+
+            <a asp-action="Index" asp-controller="ReplyContactMessage" class="btn btn-danger mt-3">Geriyə</a>
+            <button type="submit" class="btn btn-primary mt-3">Cavabla</button>
+        </form>
+    </div>
+</div>
+

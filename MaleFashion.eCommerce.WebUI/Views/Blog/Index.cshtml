@@ -1,0 +1,208 @@
+﻿@model BlogViewModel;
+
+@{
+    ViewData["Title"] = "Blog";
+}
+
+@section css{
+    <style>
+        .pagination-div > ul {
+            display: flex;
+            list-style-type: none;
+        }
+
+        .pagination-div li.disabled > a, .pagination-div li.active > a {
+            color: grey !important;
+            cursor: default;
+        }
+
+        .pagination-div a {
+            display: inline-block;
+            border: 1px solid grey;
+            border-radius: 5px;
+            padding: 5px 15px;
+            color: cadetblue !important;
+        }
+
+        .like-btn, .unlike-btn {
+            cursor: pointer;
+        }
+    </style>
+}
+
+@await Component.InvokeAsync("BlogBanner")
+
+@if (Model.PagedBlogViewModel != null)
+{
+    <section class="blog spad">
+        <div class="container">
+            <div class="row">
+                <div class="pagination-div mb-5">
+                    @Model.PagedBlogViewModel.GetPagenation(Url, "Index")
+                </div>
+                @foreach (Blog item in Model.PagedBlogViewModel.Items)
+                {
+                    <div class="col-lg-4 col-md-6 col-sm-6" id="blog-@item.Id">
+                        <div class="blog__item">
+                            <div class="blog__item__pic set-bg"
+                                 data-setbg="assets/images/blog/@item.ImagePath"></div>
+                            <div class="blog__item__text">
+                                <span>
+                                    <img src="img/icon/xcalendar.png.pagespeed.ic.GXy2gYWDh7.png"
+                                         alt="" />
+                                    @item.CreatedDate.ToString("dd.MM.yyyy")
+                                </span>
+                                <h5>@item.Title</h5>
+                                <div class="like-unlike-side">
+                                    <div class="like-side">
+                                        <a class="like-btn" data-like-id="@item.Id">
+                                            <i class="far fa-thumbs-up"></i>
+                                        </a>
+                                        <p class="like-count">@item.Likes.Count()</p>
+                                    </div>
+                                    <div class="unlike-side">
+                                        <a class="unlike-btn" data-unlike-id="@item.Id">
+                                            <i class="far fa-thumbs-down"></i>
+                                        </a>
+                                        <p class="unlike-count">@item.Unlikes.Count()</p>
+                                    </div>
+                                </div>
+                                <a asp-action="Index" asp-controller="BlogDetails" asp-route-id="@item.Id" asp-route-title="@Url.FriendlyUrlContext(item.Title)">Ətraflı</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section class="blog spad">
+        <div class="container">
+            <div class="row">
+                <div class="pagination-div mb-5">
+                    @Model.PagedBlogDetailsTagsCollectionViewModel.GetPagenation(Url, "Index")
+                </div>
+                @foreach (var item in Model.PagedBlogDetailsTagsCollectionViewModel.Items)
+                {
+                    <div class="col-lg-4 col-md-6 col-sm-6" id="blog-@item.Id">
+                        <div class="blog__item">
+                            <div class="blog__item__pic set-bg"
+                                 data-setbg="assets/images/blog/@item.Blog.ImagePath"></div>
+                            <div class="blog__item__text">
+                                <span>
+                                    <img src="img/icon/xcalendar.png.pagespeed.ic.GXy2gYWDh7.png"
+                                         alt="" />
+                                    @item.Blog.CreatedDate.ToString("dd.MM.yyyy")
+                                </span>
+                                <h5>@item.Blog.Title</h5>
+                                <div class="like-unlike-side">
+                                    <div class="like-side">
+                                        <a class="like-btn" data-like-id="@item.Id">
+                                            <i class="far fa-thumbs-up"></i>
+                                        </a>
+                                        <p class="like-count">@item.Blog.Likes.Count()</p>
+                                    </div>
+                                    <div class="unlike-side">
+                                        <a class="unlike-btn" data-unlike-id="@item.Id">
+                                            <i class="far fa-thumbs-down"></i>
+                                        </a>
+                                        <p class="unlike-count">@item.Blog.Unlikes.Count()</p>
+                                    </div>
+                                </div>
+                                <a asp-action="Index" asp-controller="BlogDetails" asp-route-id="@item.BlogId" asp-route-title="@Url.FriendlyUrlContext(item.Blog.Title)">Ətraflı</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+@section scripts{
+    <script>
+        let likeBtn = $('.like-btn');
+
+        $(likeBtn).click((e) => {
+            let blogId = $(e.currentTarget).data('like-id');
+            let likeCount = $(e.currentTarget).next('.like-count');
+            let currentUnlikeCount = $(e.currentTarget).closest('.like-unlike-side').find('.unlike-count');
+
+            $.ajax({
+                url: `@Url.Action("Like", "Blog")?blogId=${blogId}`,
+                type: "POST",
+                success: function (successMsg) {
+                    if (successMsg.error == false && successMsg.likeCount) {
+                        $(likeCount).text(successMsg.likeCount);
+                        $(currentUnlikeCount).text(successMsg.unlikeCount);
+                    }
+                },
+                error: function (errorMsg) {
+                    switch (errorMsg.status) {
+                        case 401:
+                            window.location.href = `@Url.Action("SignIn", "Account")?returnUrl=${window.location.pathname}#blog-${blogId}`
+                            break;
+                        default:
+                            console.log(errorMsg);
+                            break;
+                    }
+                }
+            });
+        });
+    </script>
+}
+
+@section scripts2{
+    <script>
+    let unlikeBtn = $('.unlike-btn');
+
+    $(unlikeBtn).click((e) => {
+        let blogId = $(e.currentTarget).data('unlike-id');
+        let unlikeCount = $(e.currentTarget).next('.unlike-count');
+        let currentLikeCount = $(e.currentTarget).closest('.like-unlike-side').find('.like-count');
+
+        $.ajax({
+            url: `@Url.Action("Unlike", "Blog")/${blogId}`,
+            type: "POST",
+            success: function (successMsg) {
+                if (successMsg.error == false && successMsg.unlikeCount) {
+                    $(unlikeCount).text(successMsg.unlikeCount);
+                    $(currentLikeCount).text(successMsg.likeCount);
+                }
+            },
+            error: function (errorMsg) {
+                switch (errorMsg.status) {
+                    case 401:
+                        window.location.href = `@Url.Action("SignIn", "Account")?returnUrl=${window.location.pathname}?%blog-${blogId}`
+                        break;
+                    default:
+                        console.log(errorMsg);
+                        break;
+                }
+            }
+        });
+    });
+    </script>
+}
+@section scripts3{
+    <script>
+        if (window.location.href.indexOf('#') != -1) {
+            let match = window.location.href.match(/.+(#.+)/);
+            let matchBlogId = match[1];
+
+            if (matchBlogId != null) {
+                $(matchBlogId).find('.like-btn').trigger('click');
+            }
+        }
+        else {
+            let unlikeMatch = window.location.href.split('?%');
+            let unlikeMatchBlogId = unlikeMatch[1];
+
+            if (unlikeMatchBlogId != null) {
+                $(`#${unlikeMatchBlogId}`).find('.unlike-btn').trigger('click');
+            }
+        }
+    </script>
+}

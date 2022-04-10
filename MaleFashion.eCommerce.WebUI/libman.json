@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jquery-validate@1.19.3",
+      "destination": "wwwroot/libs/jquery-validate/"
+    },
+    {
+      "library": "jquery-validation-unobtrusive@3.2.12",
+      "destination": "wwwroot/libs/jquery-validation-unobtrusive/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "bootstrap@5.1.0",
+      "destination": "wwwroot/libs/bootstrap/"
+    },
+    {
+      "library": "microsoft-signalr@5.0.9",
+      "destination": "wwwroot/libs/microsoft-signalr/"
+    },
+    {
+      "library": "jquery@3.6.0",
+      "destination": "wwwroot/libs/jquery/"
+    },
+    {
+      "library": "ckeditor5@29.2.0",
+      "destination": "wwwroot/libs/ckeditor5/"
+    },
+    {
+      "library": "toastr.js@2.1.4",
+      "destination": "wwwroot/libs/toastr.js/"
+    },
+    {
+      "library": "limonte-sweetalert2@11.1.9",
+      "destination": "wwwroot/libs/limonte-sweetalert2/"
+    },
+    {
+      "library": "jquery-cookie@1.4.1",
+      "destination": "wwwroot/libs/jquery-cookie/"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+﻿@model ViewClaimsViewModel;
+
+@{
+    ViewData["Title"] = "View User Claims";
+}
+
+@section css{
+    <style>
+        .view-claims-li {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+            .view-claims-li > a {
+                float: right;
+            }
+    </style>
+}
+
+<div class="root">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <ul class="list-group">
+                    <li class="list-group-item active view-claims-li text-center" aria-current="true">Current Users</li>
+                    @foreach (AppUser user in Model.Users)
+                    {
+                        <li class="list-group-item view-claims-li">Username: @user.UserName <a asp-action="GetUserPrincipal" asp-route-id="@user.Id" class="btn btn-warning">View & Change Claims</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+

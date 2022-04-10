@@ -1,0 +1,184 @@
+﻿@model IEnumerable<MaleFashion.eCommerce.WebUI.Models.Entity.Blog>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4" style="border: 1px solid cadetblue; padding: 35px; border-radius: 5px;">
+            <h3>Search for Blogs (AJAX - Fast Search Without Reloading).</h3>
+            <div class="form-group">
+                <label for="searchText">Search: </label>
+                <input class="form-control" type="text" name="searchText" id="searchText" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<h1 class="text-center">Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-info" style="display: inline-block; font-size: 1.4rem;"><i class="fas fa-plus"></i></a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthorImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthorName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthorSurname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Aphorism)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @item.Description.RemoveTags().EllipseText(100)
+                </td>
+                <td>
+                    <div class="img-div" style="width: 135%;">
+                        <img style="width: 100%;" src="assets/images/blog/@item.ImagePath" />
+                    </div>
+                </td>
+                <td>
+                    <div class="img-div" style="width: 62%;">
+                        <img src="admin-assets/img/users/@item.AuthorImagePath" style="width:100%;" />
+                    </div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuthorName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuthorSurname)
+                </td>
+                <td>
+                    @item.Aphorism.Author
+                </td>
+                <td>
+                    @item.CreatedDate.ToString("dd.MM.yyyy HH:mm:ss")
+                </td>
+                <td>
+                    @item.UpdatedDate?.ToString("dd.MM.yyyy HH:mm:ss")
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning" style="width: 100px;">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary" style="width: 100px;">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" style="width: 100px;">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section js{
+    <script>
+        let searchText = $('#searchText');
+        let tbody = $('tbody');
+
+        $(searchText).keyup((e) => {
+            let searchData = $(e.currentTarget).map((index, item) => {
+                let searchObj = {
+                    name: item.name,
+                    value: $(item).val()
+                }
+
+                return searchObj;
+            }).toArray();
+
+            let obj = {};
+
+            $.each(searchData, function (index, item) {
+                obj[item.name] = item.value;
+            });
+
+            let pattern = new RegExp(/<[^>]*>/gi);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Index")',
+                data: obj,
+                success: function (successMsg) {
+                     console.log(successMsg);
+                    $(tbody).html('');
+
+                    if (successMsg!=null) {
+                        for (let data of successMsg) {
+                            let dataText = `<tr>
+                <td>
+                    ${data.title}
+                </td>
+                <td>
+                    ${data.description.replace(pattern, "").substr(0, 100)}...
+                </td>
+                <td>
+                    <div class="img-div" style="width: 135%;">
+                        <img style="width: 100%;" src="assets/images/blog/${data.imagePath}" />
+                    </div>
+                </td>
+                <td>
+                    <div class="img-div" style="width: 62%;">
+                        <img src="admin-assets/img/users/${data.authorImagePath}" style="width:100%;" />
+                    </div>
+                </td>
+                <td>
+                    ${data.authorName}
+                </td>
+                <td>
+                    ${data.authorSurname}
+                </td>
+                <td>
+                    ${data.aphorism.author}
+                </td>
+                <td>
+                    ${data.createdDate}
+                </td>
+                <td>
+                    ${data.updatedDate == null ? '' : data.updatedDate}
+                </td>
+                <td>
+                    <a href="/admin/blogs/edit/${data.id}" class="btn btn-warning" style="width: 100px;">Edit</a>
+                    <a href="/admin/blogs/details/${data.id}" class="btn btn-primary" style="width: 100px;">Details</a>
+                    <a href="/admin/blogs/delete/${data.id}" class="btn btn-danger" style="width: 100px;">Delete</a>
+                </td>
+            </tr>`;
+
+                            $(tbody).append(dataText);
+                        }
+                    }
+                },
+                error: function (errorMsg) {
+                    console.log(errorMsg);
+                }
+            });
+        });
+    </script>
+}

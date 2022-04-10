@@ -1,0 +1,30 @@
+﻿@model MaleFashion.eCommerce.WebUI.Models.Entity.BlogDetailsTagsCollection
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="text-center">Details</h1>
+
+<div>
+    <h4 class="text-center">BlogDetailsTagsCollection</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Blog)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Blog.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Tag)
+        </dt>
+        <dd class="col-sm-10">
+            #@Html.DisplayFor(model => model.Tag.TagName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-danger">Back to List</a>
+</div>

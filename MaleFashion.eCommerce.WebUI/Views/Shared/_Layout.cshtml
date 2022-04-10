@@ -1,0 +1,390 @@
+﻿@inject FashionDbContext db;
+
+@{
+    ViewBag.Layout = "Male Fashion";
+
+    AppInfo appInfo = db.AppInfos.FirstOrDefault();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title | @ViewBag.Layout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap"
+          rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/3077fe3d43.js"
+            crossorigin="anonymous"></script>
+    <base href="~/" />
+    <link rel="stylesheet" href="assets/sources/css/aos.min.css" />
+    <link rel="stylesheet" href="libs/limonte-sweetalert2/sweetalert2.min.css" />
+    <link rel="stylesheet" href="libs/toastr.js/toastr.min.css" />
+    <link rel="stylesheet" href="assets/sources/css/bootstrap.min.css" />
+    @RenderSection("css", required: false)
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <style>
+        .header__top__hover {
+            width: 10%;
+        }
+
+        .selected-lang-span {
+            display: flex !important;
+        }
+
+        .toast-error {
+            background-color: red !important;
+        }
+
+        .basket-a, .price {
+            visibility: hidden;
+        }
+    </style>
+    <link rel="shortcut icon"
+          href="assets/icons/favicon.png"
+          type="image/x-icon" />
+</head>
+<body>
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__option">
+            <div class="offcanvas__links">
+                <a asp-action="SignIn" asp-controller="Account">Sign in</a>
+                <a asp-action="Register" asp-controller="Account">Register</a>
+            </div>
+            <div class="offcanvas__top__hover">
+                <span class="selected-lang-span">Usd <i class="arrow_carrot-down"></i></span>
+                @*<ul class="multi-lang-ul">
+                        <li><a href="#"><img src="multi-lang-imgs/az-flag.png" /></a></li>
+                        <li><a href="#"><img src="multi-lang-imgs/ru-flag.png" /></a></li>
+                        <li class="selected"><a href="#"><img src="multi-lang-imgs/us-flag.png" /></a></li>
+                    </ul>*@
+                <div class="lang header-top-right-language">
+                    <img style="max-width: 8% !important;" class="lang-flag" src="/assets/images/flags/AZERBAIJAN-FLAG.jpg" alt="APIAjax" />
+                    <div class="lang-text" style="color: white;">Azərbaycan</div>
+                    <span class="arrow_carrot-down"></span>
+                    <ul>
+                        <li>
+                            <a asp-route-lang="az" data-flag="/assets/images/flags/AZERBAIJAN-FLAG.jpg" style="color: black !important;">
+                                Azərbaycan
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-route-lang="en" data-flag="/assets/images/flags/us-flag.jpg" style="color: black !important;">
+                                English
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-route-lang="ru" data-flag="/assets/images/flags/ru-flag.jpg" style="color: black !important;">
+                                Русский
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="offcanvas__nav__option">
+            <a href="#" class="search-switch">
+                <img src="assets/images/index/download (5).webp" alt="" />
+            </a>
+            <a href="#">
+                <img src="assets/images/index/download (2).webp" alt="" />
+            </a>
+            <a href="#" class="basket-a">
+                <img src="assets/images/index/download (3).webp" alt="" />
+                <span>0</span>
+            </a>
+            <div class="price">$0.00</div>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+        <div class="offcanvas__text">
+            <p>Free shipping, 30-day return or refund guarantee.</p>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-7">
+                        <div class="header__top__left">
+                            <p>Free shipping, 30-day return or refund guarantee.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-5">
+                        <div class="header__top__right d-flex align-items-center justify-content-around">
+                            <div class="header__top__links">
+                                <a asp-action="SignIn" asp-controller="Account">Sign in</a>
+                                <a asp-action="Register" asp-controller="Account">Register</a>
+                            </div>
+                            <div class="header__top__hover">
+                                @*<span class="selected-lang-span"></span>*@
+                                @*<ul class="multi-lang-ul">
+                                        <li><a href="#"><img src="multi-lang-imgs/az-flag.png" /></a></li>
+                                        <li><a href="#"><img src="multi-lang-imgs/ru-flag.png" /></a></li>
+                                        <li class="selected"><a href="#"><img src="multi-lang-imgs/us-flag.png" /></a></li>
+                                    </ul>*@
+                                <div class="lang header-top-right-language d-flex align-items-center">
+                                    <img class="lang-flag" src="/assets/images/flags/AZERBAIJAN-FLAG.jpg" />
+                                    <div class="lang-text" style="color: white;">Azərbaycan</div>
+                                    <span class="arrow_carrot-down"></span>
+                                    <ul>
+                                        <li>
+                                            <a asp-route-lang="az" data-flag="/assets/images/flags/AZERBAIJAN-FLAG.jpg" style="color: black !important;">
+                                                Azərbaycan
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-route-lang="en" data-flag="/assets/images/flags/us-flag.jpg" style="color: black !important;">
+                                                English
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-route-lang="ru" data-flag="/assets/images/flags/ru-flag.jpg" style="color: black !important;">
+                                                Русский
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__logo">
+                        <a asp-action="Index" asp-controller="Home">
+                            <img src="assets/images/index/@appInfo.HeaderLogoPath" alt="" />
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <nav class="header__menu mobile-menu">
+                        <ul class="d-flex align-content-center">
+                            <li class="active"><a asp-action="Index" asp-controller="Home">@LayoutResource.Home</a></li>
+                            <li><a asp-action="Index" asp-controller="Shop">@LayoutResource.Shop</a></li>
+                            <li>
+                                <a style="cursor: pointer;">@LayoutResource.Pages</a>
+                                <ul class="dropdown">
+                                    <li><a asp-action="Index" asp-controller="AboutUs">@LayoutResource.About_Us</a></li>
+                                    <li><a asp-action="Index" asp-controller="ShoppingCart">@LayoutResource.Shopping_Cart</a></li>
+                                </ul>
+                            </li>
+                            <li><a asp-action="Index" asp-controller="Blog">@LayoutResource.Blog</a></li>
+                            <li><a asp-action="Index" asp-controller="Contacts">@LayoutResource.Contacts</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__nav__option">
+                        <a asp-action="Index" asp-controller="ShoppingCart"  class="basket-a">
+                            <img src="assets/images/index/download (3).webp" alt="" />
+                            <span style="left: 2px;">0</span>
+                        </a>
+                        <div class="price">$0.00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+        </div>
+    </header>
+
+    @RenderBody()
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                        <div class="footer__logo">
+                            <a asp-action="Index" asp-controller="Home">
+                                <img src="assets/images/index/@appInfo.FooterLogoPath" alt="" />
+                            </a>
+                        </div>
+                        <p>
+                            @appInfo.Description
+                        </p>
+                        <a href="#">
+                            <img src="assets/images/index/@appInfo.CardsLogoPath"
+                                 alt="" />
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Shopping</h6>
+                        <ul>
+                            <li><a href="#">Clothing Store</a></li>
+                            <li><a href="#">Trending Shoes</a></li>
+                            <li><a href="#">Accessories</a></li>
+                            <li><a href="#">Sale</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Shopping</h6>
+                        <ul>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Payment Methods</a></li>
+                            <li><a href="#">Delivary</a></li>
+                            <li><a href="#">Return & Exchanges</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>@appInfo.ContactTitle</h6>
+                        <div class="footer__newslatter">
+                            <p>
+                                @appInfo.ContactDescription
+                            </p>
+                            <form asp-action="Index" asp-controller="Subs" method="post" class="subs-form">
+                                <input name="subsMail" type="text" placeholder="Your email" class="subs-input" />
+                                <button type="submit" class="subs-btn">
+                                    <span class="icon_mail_alt"></span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="footer__copyright__text">
+                        @Html.Raw(appInfo.FooterSiteInfo)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="search-model">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch">+</div>
+            <form class="search-model-form">
+                <input type="text" id="search-input" placeholder="Search here....." />
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/sources/js/jquery-3.3.1.min.js"></script>
+    <script src="assets/sources/js/frameworks-merged.min.js"></script>
+    <script>
+        eval(mod_pagespeed_JZzsHwPKPa);
+    </script>
+    <script>
+        eval(mod_pagespeed_yAX9X7dlYR);
+    </script>
+    <script src="assets/sources/js/jquery-mergeds.min.js"></script>
+    <script>
+        eval(mod_pagespeed_ICtRagVbiv);
+    </script>
+    <script>
+        eval(mod_pagespeed_0Tm96Yey2q);
+    </script>
+    <script>
+        eval(mod_pagespeed__0kegk3Rgl);
+    </script>
+    <script src="assets/sources/js/slicknav.min.js"></script>
+    <script src="assets/sources/js/mixitup.min.js"></script>
+    <script src="assets/sources/js/owl-carousel.min.js"></script>
+    <script src="assets/sources/js/aos.min.js"></script>
+    <script src="assets/sources/js/main.js"></script>
+    <script src="libs/limonte-sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="libs/toastr.js/toastr.min.js"></script>
+    <script src="libs/toastr.js/toastr.customization.js"></script>
+    <script>
+        $(document).ready(function () {
+        //    let span = $(".selected-lang-span");
+        //let ul = $(".multi-lang-ul");
+        //let mUl = $(".multi-lang-ul>li");
+
+        //$(span).html(
+        //    `${$(ul).find("li.selected").html()} <i class="arrow_carrot-down"></i>`
+        //);
+
+        //$(mUl).on("click", function () {
+        //    $(mUl).removeClass("selected");
+        //    $(this).addClass("selected");
+        //    $(span).html(`${$(this).html()} <i class="arrow_carrot-down"></i>`);
+        //});
+
+        let subsBtn = $('.subs-btn');
+        let subsInput = $('.subs-input');
+        let subsForm = $('.subs-form');
+
+        $(subsForm).submit((e) => {
+            e.preventDefault();
+
+            if ($(subsInput).val().length <= 0) {
+                e.preventDefault();
+                alert("Xanaya mail-inizi daxil edin!");
+            }
+            else {
+                let formData = new FormData(e.currentTarget);
+
+                $.ajax({
+                    url: "@Url.Action("Index", "Subs")",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (successMsg) {
+                        if (!successMsg.error) {
+                            Swal.fire(
+                                'Uğurlu!',
+                                `${successMsg.message}`,
+                                'success'
+                            )
+                            e.currentTarget.reset();
+                            return;
+                        }
+
+                        toastr.error(successMsg.message, "Xəta!");
+                    },
+                    error: function (errorMsg) {
+                        console.log(errorMsg);
+                    }
+                });
+            }
+        });
+
+            //Multi Language
+            let url = window.location.pathname;
+
+            var el = $(`.lang [href='${url}']`).eq(0);
+
+            $('.lang-flag').attr('src', $(el).data('flag'));
+            $('.lang-text').html($(el).text());
+            //Multi Language
+    });
+    </script>
+    @RenderSection("scripts", required: false)
+    @RenderSection("scripts2", required: false)
+    @RenderSection("scripts3", required: false)
+    <script async
+            src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+
+        gtag("config", "UA-23581568-13");
+    </script>
+    <script defer
+            src="../../../static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon='{"rayId":"674e913a5d145373","token":"cd0b4b3a733644fc843ef0b185f98241","version":"2021.7.0","si":10}'></script>
+</body>
+</html>

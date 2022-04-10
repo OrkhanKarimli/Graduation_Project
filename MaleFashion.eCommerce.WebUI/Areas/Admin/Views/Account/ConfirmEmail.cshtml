@@ -1,0 +1,39 @@
+﻿@model ConfirmEmailFormModel;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Confirm Email</title>
+    <link rel="stylesheet" href="~/libs/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="root">
+        <div class="container">
+            <div class="row vh-100 align-items-center justify-content-center">
+                <div class="col-md-6">
+                    <h3 class="text-center">Daxil etdiyiniz email üzrə sizin mailə keçid linki göndəriləcək.</h3>
+                    <h3 style="color: red; text-align: center;">@TempData["ConfirmEmailError"]</h3>
+                    <form method="post" asp-action="ConfirmEmail">
+                        <div class="form-group">
+                            <label asp-for="Email">Email: </label>
+                            <input type="email" id="email" asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email"></span>
+                        </div>
+                        <button class="btn btn-success mt-2">Göndər</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/libs/jquery/jquery.min.js"></script>
+    <script src="~/libs/jquery-validate/jquery.validate.min.js"></script>
+    <script src="~/libs/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

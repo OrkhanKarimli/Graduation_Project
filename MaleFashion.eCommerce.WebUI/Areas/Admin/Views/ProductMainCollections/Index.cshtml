@@ -1,0 +1,79 @@
+﻿@model IEnumerable<MaleFashion.eCommerce.WebUI.Models.Entity.ProductMainCollection>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-center">Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-info" style="display: inline-block; font-size: 1.4rem;"><i class="fa fa-plus"></i></a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id: </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th>
+                Product Image:
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Color)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTag)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Size)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ProductMainCollection item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Id
+                </td>
+                <td>
+                    @item.Category.Name
+                </td>
+                <td>
+                    @item.Product.Title.EllipseText(50)
+                </td>
+                <td>
+                    <div class="img-div" style="width: 100%;">
+                        <img src="assets/images/shop/@item.Product.ProductImages?.FirstOrDefault(pi => pi.IsMain)?.ImagePath" style="width: 100%; height: 300px; object-fit: cover;" />
+                    </div>
+                </td>
+                <td>
+                    @item.Color.ColorName
+                </td>
+                <td>
+                    @item.ProductTag.ProductTagName
+                </td>
+                <td>
+                    @item.Size.SizeName
+                </td>
+                <td>
+                    @item.Price
+                </td>
+                <td class="d-flex flex-column">
+                    <a asp-action="Edit" style="width: 150px;" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Details" style="width: 150px; margin-top: 5px;" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                    <a asp-action="Delete" style="width: 150px; margin-top: 5px;" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
